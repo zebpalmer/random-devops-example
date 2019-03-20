@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request
 import requests
 
@@ -18,6 +19,11 @@ def jobs():
         return "Jobs:\nTitle: Devops\nDescription: Awesome\n"
     else:
         return "fail"
+
+
+@application.route("/healthz")
+def healthz():
+    return "OK"
 
 
 if __name__ == "__main__":
