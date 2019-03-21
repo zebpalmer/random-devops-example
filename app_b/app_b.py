@@ -15,16 +15,17 @@ mongo = PyMongo(application)
 
 @application.route("/auth", methods=["POST"])
 def auth():
+    username = None
     try:
         token = request.form["token"]
-        con = sql.connect("database.db")
-        cur = con.cursor()
-        cur.execute("SELECT username from users where token = (?) LIMIT 1", (token,))
-        username = cur.fetchone()[0]
-        con.close()
-        return username
-    except:
-        return "fail"
+        user_rec = mongo.db.users.find_one({"token": token})
+    except Exception as e:
+        abort(500, e)
+    else:
+        if user_rec:
+            username = user_rec["username"]
+    return username if username else abort(403)
+
 
 
 if __name__ == "__main__":
