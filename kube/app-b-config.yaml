@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-b-config
+  namespace: default
+data:
+    MONGO_HOST: 'auth-db-mongodb.default.svc.cluster.local'
+    MONGO_PORT: '27017'
+    MONGO_DB: 'auth'
+    MONGO_USER: 'appb'
+    MONGO_PASS: 'password123'
