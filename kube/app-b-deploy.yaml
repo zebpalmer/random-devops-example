@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-b
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-b
+  template:
+    metadata:
+      labels:
+        app: app-b
+    spec:
+      containers:
+      - image: registry.halo.sh/app-b:latest
+        imagePullPolicy: Always
+        name: app-b
+        envFrom:
+          - configMapRef:
+              name: app-b-config
+              optional: false
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /healthz
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 2
+        readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            failureThreshold: 2
+      imagePullSecrets:
+      - name: regcred
