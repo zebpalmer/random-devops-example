@@ -14,7 +14,7 @@ def hello():
 def jobs():
     token = request.headers["Authorization"]
     data = {"token": token}
-    result = requests.post(f"{os.environ['AUTH_SVC']}/auth", data=data).content
+    result = requests.post(f"http://{os.environ['AUTH_SVC']}/auth", data=data, timeout=5)
     if result == "density":
         return "Jobs:\nTitle: Devops\nDescription: Awesome\n"
     else:
