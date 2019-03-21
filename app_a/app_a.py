@@ -18,7 +18,7 @@ def jobs():
     if result.content == b"density":
         return "Jobs:\nTitle: Devops\nDescription: Awesome\n"
     else:
-        return "fail"
+        abort(403, f"Auth returned {result.status_code}, {result.content}")
 
 
 @application.route("/healthz")
