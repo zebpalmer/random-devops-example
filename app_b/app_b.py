@@ -27,6 +27,15 @@ def auth():
     return username if username else abort(403)
 
 
+@application.route("/healthz")
+def healthz():
+    try:
+        mongo.db.users.find_one()
+    except Exception as e:
+        abort(500, e)
+    else:
+        return "OK"
+
 
 if __name__ == "__main__":
     application.run(host="0.0.0.0", port=5001)
