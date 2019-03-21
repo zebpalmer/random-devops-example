@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request
+from flask import Flask, request, abort
 import requests
 
 application = Flask(__name__)
@@ -23,7 +23,14 @@ def jobs():
 
 @application.route("/healthz")
 def healthz():
-    return "OK"
+    try:
+        res = requests.get(f"http://{os.environ['AUTH_SVC']}/healthz", timeout=5)
+        if res.status_code != 200:
+            abort(500, f"auth svc health status: {res.status_code}")
+    except Exception as e:
+        abort(500, f"Failed contacting auth service health endpoint: {e}")
+    else:
+        return "OK"
 
 
 if __name__ == "__main__":
