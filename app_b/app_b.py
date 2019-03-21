@@ -1,7 +1,16 @@
-from flask import Flask, request
-import sqlite3 as sql
+import os
+from flask import Flask, request, abort
+from flask_pymongo import PyMongo
+
+
+mongo_uri = (
+    f"mongodb://{os.environ['MONGO_USER']}:{os.environ['MONGO_PASS']}@"
+    f"{os.environ['MONGO_HOST']}:{os.environ['MONGO_PORT']}/{os.environ['MONGO_DB']}"
+)
 
 application = Flask(__name__)
+application.config["MONGO_URI"] = mongo_uri
+mongo = PyMongo(application)
 
 
 @application.route("/auth", methods=["POST"])
